@@ -1,4 +1,3 @@
-// app/src/main/java/com/apropos/smsforwarder/SmsLog.kt
 package com.apropos.smsforwarder
 
 import android.content.Context
@@ -22,6 +21,9 @@ interface SmsLogDao {
 
     @Insert
     fun insert(log: SmsLogEntry)
+
+    @Query("DELETE FROM sms_logs")
+    fun deleteAll()
 }
 
 @Database(entities = [SmsLogEntry::class], version = 1)
@@ -54,5 +56,11 @@ object SmsLog {
 
     fun getLogs(context: Context): List<SmsLogEntry> {
         return SmsLogDatabase.getInstance(context).smsLogDao().getAll()
+    }
+
+    fun clearLogs(context: Context) {
+        CoroutineScope(Dispatchers.IO).launch {
+            SmsLogDatabase.getInstance(context).smsLogDao().deleteAll()
+        }
     }
 }

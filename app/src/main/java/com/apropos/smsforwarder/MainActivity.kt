@@ -20,6 +20,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var passwordEditText: EditText
     private lateinit var recipientEditText: EditText
     private lateinit var startButton: Button
+    private lateinit var viewLogsButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +30,7 @@ class MainActivity : AppCompatActivity() {
         passwordEditText = findViewById(R.id.passwordEditText)
         recipientEditText = findViewById(R.id.recipientEditText)
         startButton = findViewById(R.id.startButton)
+        viewLogsButton = findViewById(R.id.viewLogsButton)
 
         loadSettings()
 
@@ -39,6 +41,10 @@ class MainActivity : AppCompatActivity() {
             } else {
                 requestPermissions()
             }
+        }
+
+        viewLogsButton.setOnClickListener {
+            startActivity(Intent(this, LogActivity::class.java))
         }
 
         // Start the service if permissions are already granted
