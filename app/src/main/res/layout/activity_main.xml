@@ -43,10 +43,10 @@
         android:lines="3" />
 
     <Button
-        android:id="@+id/startButton"
+        android:id="@+id/toggleServiceButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Start Service" />
+        android:text="@string/start_service" />
 
     <Button
         android:id="@+id/viewLogsButton"
