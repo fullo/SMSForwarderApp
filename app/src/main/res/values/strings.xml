@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">SMS Forwarder</string>
+    <string name="clear_logs">Clear Logs</string>
+    <string name="view_logs">View Logs</string>
 </resources>
