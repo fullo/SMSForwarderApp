@@ -5,52 +5,38 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <EditText
-        android:id="@+id/emailEditText"
+    <TextView
+        android:id="@+id/smsPermissionStatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Email"
-        android:inputType="textEmailAddress" />
+        android:text="SMS Permission: Not Granted"
+        android:textSize="16sp"
+        android:layout_marginBottom="8dp"/>
 
-    <EditText
-        android:id="@+id/passwordEditText"
+    <TextView
+        android:id="@+id/notificationPermissionStatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Password"
-        android:inputType="textPassword" />
+        android:text="Notification Permission: Not Granted"
+        android:textSize="16sp"
+        android:layout_marginBottom="16dp"/>
 
-    <EditText
-        android:id="@+id/recipientEditText"
+    <Button
+        android:id="@+id/settingsButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Recipient Email"
-        android:inputType="textEmailAddress" />
-
-    <EditText
-        android:id="@+id/subjectFormatEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Subject Format"
-        android:text="SMS from {sender}" />
-
-    <EditText
-        android:id="@+id/bodyFormatEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Body Format"
-        android:text="From: {sender}\nTime: {time}\n\n{body}"
-        android:inputType="textMultiLine"
-        android:lines="3" />
+        android:text="Settings" />
 
     <Button
         android:id="@+id/toggleServiceButton"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/start_service" />
+        android:text="@string/start_service"
+        android:enabled="false" />
 
     <Button
         android:id="@+id/viewLogsButton"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/view_logs" />
 
