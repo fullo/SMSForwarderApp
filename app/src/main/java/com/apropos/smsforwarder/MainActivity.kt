@@ -70,13 +70,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun updatePermissionStatus() {
         val smsPermissionGranted = ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_GRANTED
-        smsPermissionStatus.text = "SMS Permission: ${if (smsPermissionGranted) "Granted" else "Not Granted"}"
+        smsPermissionStatus.text = getString(R.string.sms_permission_status, if (smsPermissionGranted) "Granted" else "Not Granted")
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             val notificationPermissionGranted = ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
-            notificationPermissionStatus.text = "Notification Permission: ${if (notificationPermissionGranted) "Granted" else "Not Granted"}"
+            notificationPermissionStatus.text = getString(R.string.notification_permission_status, if (notificationPermissionGranted) "Granted" else "Not Granted")
         } else {
-            notificationPermissionStatus.text = "Notification Permission: Not Required"
+            notificationPermissionStatus.text = getString(R.string.notification_permission_status, "Not Required")
         }
     }
 

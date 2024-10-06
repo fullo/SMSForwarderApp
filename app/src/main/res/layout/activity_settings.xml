@@ -9,39 +9,44 @@
         android:id="@+id/emailEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Email"
-        android:inputType="textEmailAddress" />
+        android:hint="@string/email_hint"
+        android:inputType="textEmailAddress"
+        android:autofillHints="emailAddress" />
 
     <EditText
         android:id="@+id/passwordEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Password"
-        android:inputType="textPassword" />
+        android:hint="@string/password_hint"
+        android:inputType="textPassword"
+        android:autofillHints="password" />
 
     <EditText
         android:id="@+id/recipientEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Recipient Email"
-        android:inputType="textEmailAddress" />
+        android:hint="@string/recipient_email_hint"
+        android:inputType="textEmailAddress"
+        android:autofillHints="emailAddress" />
 
     <EditText
         android:id="@+id/subjectFormatEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Subject Format"
-        android:text="SMS from {sender}" />
+        android:hint="@string/subject_format_hint"
+        android:text="@string/sms_from_sender"
+        android:inputType="text"
+        android:autofillHints="" />
 
     <EditText
         android:id="@+id/bodyFormatEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Body Format"
-        android:text="From: {sender}\nTime: {time}\n\n{body}"
+        android:hint="@string/body_format_hint"
+        android:text="@string/default_body_format"
         android:inputType="textMultiLine"
-        android:lines="3" />
-
+        android:lines="3"
+        android:autofillHints="" />
     <Button
         android:id="@+id/saveSettingsButton"
         android:layout_width="match_parent"

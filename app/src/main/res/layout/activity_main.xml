@@ -9,7 +9,7 @@
         android:id="@+id/smsPermissionStatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="SMS Permission: Not Granted"
+        android:text="@string/sms_permission_not_granted"
         android:textSize="16sp"
         android:layout_marginBottom="8dp"/>
 
@@ -17,7 +17,7 @@
         android:id="@+id/notificationPermissionStatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Notification Permission: Not Granted"
+        android:text="@string/notification_permission_not_granted"
         android:textSize="16sp"
         android:layout_marginBottom="16dp"/>
 
@@ -25,7 +25,7 @@
         android:id="@+id/settingsButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Settings" />
+        android:text="@string/settings" />
 
     <Button
         android:id="@+id/toggleServiceButton"
