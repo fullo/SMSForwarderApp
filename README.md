@@ -46,7 +46,7 @@ SMSForwarder is an Android application that automatically forwards incoming SMS 
 3. Sync the project with Gradle files.
 4. Build and run the application on an Android device or emulator.
 
-## Testing
+## Testing (tbd)
 The project includes both unit tests and instrumented tests:
 - Unit tests: Located in `app/src/test/java/com/apropos/smsforwarder/`
 - Instrumented tests: Located in `app/src/androidTest/java/com/apropos/smsforwarder/`
@@ -60,16 +60,14 @@ The app requires the following permissions:
 - `RECEIVE_SMS`: To intercept incoming SMS messages.
 - `INTERNET`: To send emails.
 - `FOREGROUND_SERVICE`: To run as a foreground service.
+- `NOTIFICATION`: To forcibly enable notifications. 
 
 ## Notes for Developers
 - Ensure proper error handling and user notifications for failed forwarding attempts.
-- Consider implementing encryption for stored email credentials.
-- Regularly update dependencies to maintain security and compatibility.
 - Follow Android best practices for background services and battery optimization.
 
 ## Future Enhancements
 1. Implement message filtering options.
 2. Add support for MMS forwarding.
-3. Implement end-to-end encryption for forwarded messages.
 4. Create a widget for quick service toggling.
 5. Add support for multiple email recipients.
