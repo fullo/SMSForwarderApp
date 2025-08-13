@@ -98,7 +98,7 @@ dependencies {
     implementation("androidx.recyclerview:recyclerview:1.3.1")
 
     // Security
-    implementation("androidx.security:security-crypto:1.1.0-alpha06")
+    implementation("androidx.security:security-crypto:1.0.0") // A stable version
     implementation("com.google.crypto.tink:tink-android:1.7.0")
 
     testImplementation("junit:junit:4.13.2")
@@ -106,7 +106,5 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.06.01"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
-
-
 
 }

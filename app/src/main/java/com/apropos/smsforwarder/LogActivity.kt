@@ -55,7 +55,7 @@ class LogActivity : AppCompatActivity() {
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(this@LogActivity, "Error loading logs: ${e.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@LogActivity, getString(R.string.toast_error_loading_logs, e.message), Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -66,26 +66,26 @@ class LogActivity : AppCompatActivity() {
             try {
                 val result = EmailSender.sendEmail(this@LogActivity, logEntry.sender, logEntry.body, logEntry.time)
                 if (result.isSuccess) {
-                    Toast.makeText(this@LogActivity, "Message resent successfully", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@LogActivity, getString(R.string.toast_message_resent_successfully), Toast.LENGTH_SHORT).show()
                     SmsLog.updateLogStatus(this@LogActivity, logEntry.id, true)
                     loadLogs() // Reload logs to reflect the updated status
                 } else {
-                    Toast.makeText(this@LogActivity, "Failed to resend message: ${result.exceptionOrNull()?.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@LogActivity, getString(R.string.toast_failed_to_resend_message, result.exceptionOrNull()?.message), Toast.LENGTH_LONG).show()
                 }
             } catch (e: Exception) {
-                Toast.makeText(this@LogActivity, "Error resending message: ${e.message}", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@LogActivity, getString(R.string.toast_error_resending_message, e.message), Toast.LENGTH_LONG).show()
             }
         }
     }
 
     private fun showClearLogsConfirmationDialog() {
         AlertDialog.Builder(this)
-            .setTitle("Clear Logs")
-            .setMessage("Are you sure you want to clear all logs? This action cannot be undone.")
-            .setPositiveButton("Clear") { _, _ ->
+            .setTitle(getString(R.string.clear_logs)) // Reusing existing string
+            .setMessage(getString(R.string.dialog_clear_logs_message))
+            .setPositiveButton(getString(R.string.button_clear)) { _, _ ->
                 clearLogs()
             }
-            .setNegativeButton("Cancel", null)
+            .setNegativeButton(getString(R.string.button_cancel), null)
             .show()
     }
 
@@ -94,12 +94,12 @@ class LogActivity : AppCompatActivity() {
             try {
                 SmsLog.clearAllLogs(this@LogActivity)
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(this@LogActivity, "All logs cleared", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@LogActivity, getString(R.string.toast_all_logs_cleared), Toast.LENGTH_SHORT).show()
                     loadLogs() // Reload (empty) logs
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(this@LogActivity, "Error clearing logs: ${e.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@LogActivity, getString(R.string.toast_error_clearing_logs, e.message), Toast.LENGTH_LONG).show()
                 }
             }
         }
@@ -125,12 +125,12 @@ class LogActivity : AppCompatActivity() {
         override fun onBindViewHolder(holder: LogViewHolder, position: Int) {
             val logEntry = logs[position]
             holder.timeTextView.text = logEntry.time
-            holder.senderTextView.text = "From: ${logEntry.sender}"
+            holder.senderTextView.text = holder.itemView.context.getString(R.string.log_item_from_sender, logEntry.sender)
             holder.bodyTextView.text = logEntry.body
             holder.resendButton.setOnClickListener { onResendClick(logEntry) }
 
             if (!logEntry.sent) {
-                holder.itemView.setBackgroundColor(Color.parseColor("#FFCCCC"))
+                holder.itemView.setBackgroundColor(Color.parseColor("#FFCCCC")) // Keep color hardcoded for now
             } else {
                 holder.itemView.setBackgroundColor(Color.TRANSPARENT)
             }

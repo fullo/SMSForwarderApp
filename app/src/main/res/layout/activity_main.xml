@@ -5,34 +5,18 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <TextView
-        android:id="@+id/smsPermissionStatus"
+    <Button
+        android:id="@+id/toggleServiceButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/sms_permission_not_granted"
-        android:textSize="16sp"
-        android:layout_marginBottom="8dp"/>
-
-    <TextView
-        android:id="@+id/notificationPermissionStatus"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/notification_permission_not_granted"
-        android:textSize="16sp"
-        android:layout_marginBottom="16dp"/>
+        android:enabled="false"
+        android:text="@string/start_service" />
 
     <Button
         android:id="@+id/settingsButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/settings" />
-
-    <Button
-        android:id="@+id/toggleServiceButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/start_service"
-        android:enabled="false" />
+        android:text="@string/button_email_settings" />
 
     <Button
         android:id="@+id/viewLogsButton"
@@ -40,4 +24,131 @@
         android:layout_height="wrap_content"
         android:text="@string/view_logs" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="?android:attr/listDivider" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/diagnostics_title"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:id="@+id/diagnosticInfoTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/checkStatusButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/check_status"
+        android:drawableStart="@drawable/ic_info_outline"
+        android:drawablePadding="8dp" />
+
+    <TextView
+        android:id="@+id/limitationsStatusTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:padding="8dp"
+        android:background="#FFF3CD"
+        android:textColor="#856404"
+        android:visibility="gone"
+        android:textSize="14sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="?android:attr/listDivider" />
+
+    <!-- SMS Permission Status with Gear Button -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:id="@+id/smsPermissionStatus"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/sms_permission_status"
+            android:textSize="16sp" />
+
+        <ImageButton
+            android:id="@+id/smsPermissionGearButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_menu_preferences"
+            android:contentDescription="@string/cd_configure_sms_permission"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp"/>
+    </LinearLayout>
+
+    <!-- Notification Permission Status with Gear Button -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:id="@+id/notificationPermissionStatus"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/notification_permission_not_granted"
+            android:textSize="16sp" />
+
+        <ImageButton
+            android:id="@+id/notificationPermissionGearButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_menu_preferences"
+            android:contentDescription="@string/cd_configure_notification_permission"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp"/>
+    </LinearLayout>
+
+    <!-- Battery Optimization Status with Gear Button -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:id="@+id/batteryOptimizationStatus"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/battery_permission_status"
+            android:textSize="16sp" />
+
+        <ImageButton
+            android:id="@+id/batteryOptimizationGearButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_menu_preferences"
+            android:contentDescription="@string/cd_configure_battery_optimization"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp"/>
+    </LinearLayout>
 </LinearLayout>

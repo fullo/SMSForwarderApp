@@ -1,12 +1,12 @@
 <resources>
     <string name="app_name">SMS Forwarder</string>
-    <!-- Stringhe esistenti -->
+    <!-- Existing strings -->
     <string name="clear_logs">Clear Logs</string>
     <string name="view_logs">View Logs</string>
     <string name="start_service">Start Service</string>
     <string name="stop_service">Stop Service</string>
 
-    <!-- Nuove stringhe -->
+    <!-- New strings -->
     <string name="email_hint">Email</string>
     <string name="password_hint">Password</string>
     <string name="recipient_email_hint">Recipient Email</string>
@@ -16,12 +16,177 @@
     <string name="back">Back</string>
     <string name="sms_permission_not_granted">SMS Permission: Not Granted</string>
     <string name="notification_permission_not_granted">Notification Permission: Not Granted</string>
-    <string name="settings">Settings</string>
+    <string name="settings">Settings</string> <!-- This key might be used by showConfigurationOptions, value unchanged for now -->
     <string name="sms_forwarding_logs">SMS Forwarding Logs</string>
     <string name="clear_all_logs">Clear all logs</string>
     <string name="resend">Resend</string>
     <string name="sms_permission_status">SMS Permission: %1$s</string>
     <string name="notification_permission_status">Notification Permission: %1$s</string>
+    <string name="battery_permission_status">Battery Permission: %1$s</string>
     <string name="sms_from_sender">SMS from {sender}</string>
     <string name="default_body_format">From: {sender}\nTime: {time}\n\n{body}</string>
+
+    <!-- Strings for Battery Optimization -->
+    <string name="check_status">Check System Status</string>
+    <string name="partial_mode_title">⚡ Not fully working</string>
+    <string name="configure_now">Configure now</string>
+    <string name="continue_anyway">Continue anyway</string>
+    <string name="dont_ask_again">Do not ask again</string>
+    <string name="limitation_sms_delay">• SMS might be received with delay</string>
+    <string name="limitation_forwarding_delay">• Forwarding might not happen immediately</string>
+    <string name="limitation_service_stops">• The service might stop after a few minutes of inactivity</string>
+    <string name="limitation_device_blocks_app">• The device might block the app after 10\u201320 minutes</string>
+    <string name="limitation_manual_config_needed">• Requires manual configuration in manufacturer settings</string>
+    <string name="limitation_additional_restrictions">• There might be additional manufacturer restrictions</string>
+    <string name="optimization_info_dialog_message_limitations">The app will work with some limitations:</string>
+    <string name="optimization_info_dialog_message_disable_optimizations">For optimal performance, disable battery optimization.</string>
+    <string name="optimization_info_dialog_title">⚡ Partial Functionality</string>
+    <string name="toast_battery_optimization_ok">Battery optimization is correctly configured (app is not restricted).</string>
+    <string name="battery_optimization_not_restricted">Not restricted</string>
+
+    <!-- Strings for Permission Dialog -->
+    <string name="permission_status_title">Permission status</string>
+    <string name="grant_permissions">Grant Permissions</string>
+    <string name="continue_without">Continue without</string>
+    <string name="app_not_working">⚠️ App does not work properly</string>
+    <string name="understood">Understood</string>
+
+    <!-- Strings for System Check -->
+    <string name="system_check_title">System Check</string>
+    <string name="configure">Configure</string>
+    <string name="what_to_configure">What to configure</string>
+    <string name="permissions_option">Permissions</string>
+    <string name="battery_optimization_option">Battery Optimization</string>
+    <string name="email_settings_option">Email</string> <!-- Changed from "Email Settings" -->
+    <string name="button_email_settings">Email Settings</string> <!-- New string for the button -->
+    <string name="cd_configure_sms_permission">Configure SMS Permission</string>
+    <string name="cd_configure_notification_permission">Configure Notification Permission</string>
+    <string name="cd_configure_battery_optimization">Configure Battery Optimization</string>
+    <string name="diagnostics_title">Diagnostics</string>
+
+
+    <!-- Strings for limitations -->
+    <string name="limited_functionality">Limited functionality: %1$s</string>
+    <string name="details">Details</string>
+
+    <!-- Preference Keys -->
+    <string name="sms_forwarder_prefs" translatable="false">SMSForwarderPrefs</string>
+    <string name="email_pref_key" translatable="false">email</string>
+    <string name="password_pref_key" translatable="false">password</string>
+    <string name="recipient_pref_key" translatable="false">recipient</string>
+    <string name="is_service_running_pref_key" translatable="false">isServiceRunning</string>
+    <string name="is_first_launch_pref_key" translatable="false">is_first_launch</string>
+    <string name="service_restart_count_pref_key" translatable="false">service_restart_count</string>
+    <string name="last_restart_time_pref_key" translatable="false">last_restart_time</string>
+
+    <!-- Preference Keys for EncryptedSharedPreferences -->
+    <string name="sms_forwarder_prefs_encrypted" translatable="false">SmsForwarderPrefsEncrypted</string>
+    <string name="pref_key_email_address" translatable="false">email_address</string>
+    <string name="pref_key_email_password" translatable="false">email_password</string>
+    <string name="pref_key_recipient_email_address" translatable="false">recipient_email_address</string>
+    <string name="pref_key_migration_to_encrypted_done" translatable="false">migration_to_encrypted_prefs_done</string>
+
+    <!-- Strings extracted from MainActivity.kt (Ensure no duplicates with Preference Keys) -->
+    <string name="granted">Granted</string>
+    <string name="not_granted">Not Granted</string>
+    <string name="not_required">Not Required</string>
+    <string name="permissions_required">Permissions are required for the app to function</string>
+    <string name="sms_forwarder_service_started">SMS Forwarder Service Started</string>
+    <string name="sms_forwarder_service_stopped">SMS Forwarder Service Stopped</string>
+    <string name="battery_optimization_active_warning">⚠️ Battery optimization active. The app may not work correctly.</string>
+    <string name="configure_button">Configure</string>
+    <string name="service_restarted_too_often_message">The service has been restarted %1$d times. Consider configuring battery optimizations.</string>
+    <string name="service_stability_warning_title">⚠️ Service Stability</string>
+    <string name="ignore_button">Ignore</string>
+    <string name="package_uri_prefix">package:</string>
+    <string name="limited_functionality_one_restriction">Limited functionality: %1$d active restriction</string>
+    <string name="limited_functionality_multiple_restrictions">Limited functionality: %1$d active restrictions</string>
+    <string name="details_button">Details</string>
+    <string name="missing_critical_permissions_summary">%1$d missing critical permissions</string>
+    <string name="battery_optimization_active">Battery optimization active</string>
+    <string name="limitations_summary_prefix">⚠️ </string>
+    <string name="sms_permission_name">SMS</string>
+    <string name="internet_permission_name">Internet</string>
+    <string name="manual_check_battery_header">=== BATTERY OPTIMIZATION ===</string>
+    <string name="manual_check_manufacturer_label">Manufacturer: </string>
+    <string name="manual_check_optimization_active_label">Active optimizations: </string>
+    <string name="manual_check_yes">YES</string>
+    <string name="manual_check_no">NO</string>
+    <string name="manual_check_limitations_header">Limitations:</string>
+    <string name="manual_check_service_status_header">=== SERVICE STATUS ===</string>
+    <string name="manual_check_service_active_label">Service active: </string>
+    <string name="manual_check_service_should_be_running_warning">⚠️ The service should be active but it is not!</string>
+    <string name="manual_check_configuration_header">=== CONFIGURATION ===</string>
+    <string name="manual_check_email_configured_label">Email configured: </string>
+    <string name="manual_check_password_configured_label">Password configured: </string>
+    <string name="manual_check_recipient_configured_label">Recipient configured: </string>
+    <string name="manual_check_dialog_title">System Check</string>
+    <string name="ok_button">OK</string>
+    <string name="limitations_summary_formatted">%1$s %2$s</string>
+
+    <!-- Strings from LogActivity.kt -->
+    <string name="toast_error_loading_logs">Error loading logs: %1$s</string>
+    <string name="toast_message_resent_successfully">Message resent successfully</string>
+    <string name="toast_failed_to_resend_message">Failed to resend message: %1$s</string>
+    <string name="toast_error_resending_message">Error resending message: %1$s</string>
+    <string name="dialog_clear_logs_message">Are you sure you want to clear all logs? This action cannot be undone.</string>
+    <string name="button_clear">Clear</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="toast_all_logs_cleared">All logs cleared</string>
+    <string name="toast_error_clearing_logs">Error clearing logs: %1$s</string>
+    <string name="log_item_from_sender">From: %1$s</string>
+
+    <!-- Strings from PermissionExplanationDialog.kt -->
+    <string name="perm_receive_sms_name">SMS Reception</string>
+    <string name="perm_receive_sms_reason">To read incoming messages</string>
+    <string name="perm_receive_sms_impact">Without: the app cannot forward any SMS</string>
+    <string name="perm_post_notifications_name">Notifications</string>
+    <string name="perm_post_notifications_reason">To inform you about the forwarding status</string>
+    <string name="perm_post_notifications_impact">Without: you won\'t see success/error notifications</string>
+    <string name="perm_receive_boot_completed_name">Auto-start</string>
+    <string name="perm_receive_boot_completed_reason">To restart after the device powers on</string>
+    <string name="perm_receive_boot_completed_impact">Without: you will have to manually restart the app after each reboot</string>
+    <string name="perm_wake_lock_name">Wake Lock</string>
+    <string name="perm_wake_lock_reason">To process SMS when the screen is off</string>
+    <string name="perm_wake_lock_impact">Without: possible delays in forwarding when the screen is off</string>
+    <string name="perm_internet_name">Internet</string>
+    <string name="perm_internet_reason">To send emails</string>
+    <string name="perm_internet_impact">Without: impossible to forward via email</string>
+
+    <string name="dialog_perms_granted_header">✅ GRANTED PERMISSIONS:</string>
+    <string name="dialog_perms_granted_item_format">• %1$s</string>
+    <string name="dialog_perms_missing_header">⚠️ MISSING PERMISSIONS AND IMPACT:</string>
+    <string name="dialog_perms_missing_item_name_format">❌ %1$s</string>
+    <string name="dialog_perms_missing_item_impact_format">   %1$s</string>
+    <string name="dialog_perms_critical_missing_header">🔴 THE APP CANNOT FUNCTION without:</string>
+    <string name="dialog_perms_critical_missing_item_format">   • %1$s</string>
+    <string name="dialog_perms_all_granted_message">All permissions have been granted! ✨</string>
+
+    <string name="manual_check_perms_header">=== PERMISSION CHECK ===</string>
+    <string name="manual_check_perms_date_format">Date: %1$s</string>
+    <string name="manual_check_perms_granted_count">Granted: %1$d/%2$d</string>
+    <string name="manual_check_perms_missing_count">Missing: %1$d/%2$d</string>
+    <string name="manual_check_perms_limited_functionality_header">Limited functionality:</string>
+    <string name="manual_check_perms_impact_item_format">- %1$s</string>
+    <string name="manual_check_perms_app_not_working_warning">⚠️ APP NOT FUNCTIONING</string>
+    <string name="manual_check_perms_app_working_limited">✓ App functioning with limitations</string>
+    <string name="manual_check_perms_app_fully_working">✓ App fully functional</string>
+
+    <string name="dialog_critical_warning_message_header">The app CANNOT function without:</string>
+    <string name="dialog_critical_warning_item_format">• %1$s: %2$s</string>
+    <string name="dialog_critical_warning_disabled_functionality_header">Functionality completely disabled:</string>
+    <string name="dialog_critical_warning_disabled_item_format">• %1$s</string>
+
+    <!-- Strings from SettingsActivity.kt -->
+    <string name="toast_email_password_recipient_required">Email, password, and recipient email must be configured</string>
+    <string name="toast_settings_saved">Settings saved</string>
+
+    <!-- Strings from SmsForwarderService.kt -->
+    <string name="error_email_password_recipient_unconfigured">Email, password, and recipient must be configured</string>
+    <string name="notification_channel_name">SMS Forwarder Service</string>
+    <string name="notification_channel_description">Persistent notification for the SMS Forwarder service</string>
+    <string name="notification_service_active_text">Service active - SMS forwarding enabled</string>
+    <string name="notification_title_error">SMS Forwarder - Error</string>
+    <string name="notification_default_config_error_text">Configuration error</string>
+
 </resources>

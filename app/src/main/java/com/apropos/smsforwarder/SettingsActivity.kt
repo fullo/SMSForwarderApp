@@ -66,7 +66,7 @@ class SettingsActivity : AppCompatActivity() {
         val bodyFormat = bodyFormatEditText.text.toString().trim()
 
         if (email.isEmpty() || password.isEmpty() || recipient.isEmpty()) {
-            Toast.makeText(this, "Email, password, and recipient email must be configured", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.toast_email_password_recipient_required), Toast.LENGTH_LONG).show()
             return false
         }
 
@@ -80,7 +80,7 @@ class SettingsActivity : AppCompatActivity() {
             apply()
         }
 
-        Toast.makeText(this, "Settings saved", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, getString(R.string.toast_settings_saved), Toast.LENGTH_SHORT).show()
         return true
     }
 }
