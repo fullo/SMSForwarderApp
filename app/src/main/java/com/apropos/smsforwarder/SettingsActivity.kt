@@ -1,4 +1,3 @@
-// app/src/main/java/com/apropos/smsforwarder/SettingsActivity.kt
 package com.apropos.smsforwarder
 
 import android.os.Bundle
@@ -16,9 +15,13 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var saveSettingsButton: Button
     private lateinit var backButton: Button
 
+    private lateinit var prefs: SecurePreferencesManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
+
+        prefs = SecurePreferencesManager.getInstance(this)
 
         emailEditText = findViewById(R.id.emailEditText)
         passwordEditText = findViewById(R.id.passwordEditText)
@@ -49,15 +52,11 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun loadSettings() {
-        val prefsFile = getString(R.string.sms_forwarder_prefs)
-        val sharedPrefs = getSharedPreferences(prefsFile, MODE_PRIVATE)
-
-        emailEditText.setText(sharedPrefs.getString(getString(R.string.pref_key_email_address), ""))
-        passwordEditText.setText(sharedPrefs.getString(getString(R.string.pref_key_email_password), ""))
-        recipientEditText.setText(sharedPrefs.getString(getString(R.string.pref_key_recipient_email_address), ""))
-        // Consider defining default values in strings.xml as well for consistency
-        subjectFormatEditText.setText(sharedPrefs.getString(getString(R.string.pref_key_subject_format), "SMS from {sender}"))
-        bodyFormatEditText.setText(sharedPrefs.getString(getString(R.string.pref_key_body_format), "From: {sender}\nTime: {time}\n\n{body}"))
+        emailEditText.setText(prefs.getString("email"))
+        passwordEditText.setText(prefs.getString("password"))
+        recipientEditText.setText(prefs.getString("recipient"))
+        subjectFormatEditText.setText(prefs.getString("subjectFormat", "SMS from {sender}"))
+        bodyFormatEditText.setText(prefs.getString("bodyFormat", "From: {sender}\nTime: {time}\n\n{body}"))
     }
 
     private fun saveSettings(): Boolean {
@@ -68,22 +67,17 @@ class SettingsActivity : AppCompatActivity() {
         val bodyFormat = bodyFormatEditText.text.toString().trim()
 
         if (email.isEmpty() || password.isEmpty() || recipient.isEmpty()) {
-            Toast.makeText(this, getString(R.string.toast_email_password_recipient_required), Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.email_password_recipient_required), Toast.LENGTH_LONG).show()
             return false
         }
 
-        val prefsFile = getString(R.string.sms_forwarder_prefs)
-        val sharedPrefs = getSharedPreferences(prefsFile, MODE_PRIVATE)
-        sharedPrefs.edit().apply {
-            putString(getString(R.string.pref_key_email_address), email)
-            putString(getString(R.string.pref_key_email_password), password)
-            putString(getString(R.string.pref_key_recipient_email_address), recipient)
-            putString(getString(R.string.pref_key_subject_format), subjectFormat)
-            putString(getString(R.string.pref_key_body_format), bodyFormat)
-            apply()
-        }
+        prefs.putString("email", email)
+        prefs.putString("password", password)
+        prefs.putString("recipient", recipient)
+        prefs.putString("subjectFormat", subjectFormat)
+        prefs.putString("bodyFormat", bodyFormat)
 
-        Toast.makeText(this, getString(R.string.toast_settings_saved), Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, getString(R.string.settings_saved), Toast.LENGTH_SHORT).show()
         return true
     }
 }

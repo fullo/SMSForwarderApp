@@ -1,3 +1,4 @@
+// app/src/main/java/com/apropos/smsforwarder/MainActivity.kt
 package com.apropos.smsforwarder
 
 import android.Manifest
@@ -27,6 +28,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var smsPermissionStatus: TextView
     private lateinit var notificationPermissionStatus: TextView
     private lateinit var batteryOptimizationStatus: TextView
+    private lateinit var securityStatus: TextView
     private lateinit var settingsButton: Button // This is now "Email Settings"
     private lateinit var toggleServiceButton: Button
     private lateinit var viewLogsButton: Button
@@ -34,12 +36,13 @@ class MainActivity : AppCompatActivity() {
     private lateinit var limitationsStatusTextView: TextView
     private lateinit var diagnosticInfoTextView: TextView // For displaying diagnostic info
 
-
     // New Gear ImageButtons
     private lateinit var smsPermissionGearButton: ImageButton
     private lateinit var notificationPermissionGearButton: ImageButton
     private lateinit var batteryOptimizationGearButton: ImageButton
 
+    // SecurePreferencesManager
+    private lateinit var prefs: SecurePreferencesManager
 
     private val settingsLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         updateUIVisibilityAndStatus()
@@ -50,9 +53,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        prefs = SecurePreferencesManager.getInstance(this)
+
         smsPermissionStatus = findViewById(R.id.smsPermissionStatus)
         notificationPermissionStatus = findViewById(R.id.notificationPermissionStatus)
         batteryOptimizationStatus = findViewById(R.id.batteryOptimizationStatus)
+        securityStatus = findViewById(R.id.securityStatus)
         settingsButton = findViewById(R.id.settingsButton) // Text changed in XML to "Email Settings"
         toggleServiceButton = findViewById(R.id.toggleServiceButton)
         viewLogsButton = findViewById(R.id.viewLogsButton)
@@ -66,6 +72,12 @@ class MainActivity : AppCompatActivity() {
         batteryOptimizationGearButton = findViewById(R.id.batteryOptimizationGearButton)
 
         updateUIVisibilityAndStatus()
+        updateSecurityStatus()
+
+        // Controlla sicurezza solo se non abbiamo già mostrato l'avviso
+        if (!prefs.getBoolean("security_warning_shown", false)) {
+            checkSecurityAndShowWarning()
+        }
 
         settingsButton.setOnClickListener { // This button now opens Email Settings
             val intent = Intent(this, SettingsActivity::class.java)
@@ -138,6 +150,7 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         updateUIVisibilityAndStatus()
+        updateSecurityStatus()
         displayDiagnosticInfo() // Refresh diagnostic info
     }
 
@@ -147,7 +160,6 @@ class MainActivity : AppCompatActivity() {
         checkPreferencesAndUpdateButton() // This also calls updateToggleButtonText()
         showLimitationsIndicator()
     }
-
 
     private fun openAppSettings() {
         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
@@ -168,16 +180,35 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun updateSecurityStatus() {
+        securityStatus.text = prefs.getSecurityStatusMessage()
+
+        // Colora il testo in base al livello di sicurezza
+        if (prefs.isUsingSecureStorage()) {
+            securityStatus.setTextColor(ContextCompat.getColor(this, android.R.color.holo_green_dark))
+        } else {
+            securityStatus.setTextColor(ContextCompat.getColor(this, android.R.color.holo_orange_dark))
+        }
+    }
+
+    private fun checkSecurityAndShowWarning() {
+        if (prefs.shouldShowSecurityWarning()) {
+            androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle(getString(R.string.security_warning_title))
+                .setMessage(getString(R.string.security_warning_message))
+                .setPositiveButton(getString(R.string.security_warning_understood)) { dialog, _ ->
+                    dialog.dismiss()
+                    // Salva che l'utente ha visto l'avviso
+                    prefs.putBoolean("security_warning_shown", true)
+                }
+                .setCancelable(false)
+                .show()
+        }
+    }
+
     private fun checkPreferencesAndUpdateButton(): Boolean {
-        // Use plain SharedPreferences
-        val sharedPrefs = getSharedPreferences(getString(R.string.sms_forwarder_prefs), MODE_PRIVATE)
-
-        // Use the preference keys defined in strings.xml (ensure these are the non-encrypted ones if they differed)
-        val email = sharedPrefs.getString(getString(R.string.pref_key_email_address), "")
-        val password = sharedPrefs.getString(getString(R.string.pref_key_email_password), "")
-        val recipient = sharedPrefs.getString(getString(R.string.pref_key_recipient_email_address), "")
-
-        val preferencesConfigured = !email.isNullOrEmpty() && !password.isNullOrEmpty() && !recipient.isNullOrEmpty()
+        // AGGIORNATO: Usa SecurePreferencesManager invece di SharedPreferences dirette
+        val preferencesConfigured = prefs.isEmailConfigured()
         val permissionsGranted = checkPermissions()
 
         val isEnabled = preferencesConfigured && permissionsGranted
@@ -252,17 +283,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun isServiceRunning(): Boolean {
-        // This flag is not sensitive, so keep using plain text SharedPreferences
-        val sharedPrefs = getSharedPreferences(getString(R.string.sms_forwarder_prefs), MODE_PRIVATE)
-        return sharedPrefs.getBoolean(getString(R.string.pref_key_is_service_running), false)
+        // AGGIORNATO: Usa SecurePreferencesManager invece di SharedPreferences dirette
+        return prefs.getBoolean("isServiceRunning", false)
     }
 
     private fun setServiceRunning(isRunning: Boolean) {
-        // This flag is not sensitive, so keep using plain text SharedPreferences
-        val sharedPrefs = getSharedPreferences(getString(R.string.sms_forwarder_prefs), MODE_PRIVATE)
-        sharedPrefs.edit {
-            putBoolean(getString(R.string.pref_key_is_service_running), isRunning)
-        }
+        // AGGIORNATO: Usa SecurePreferencesManager invece di SharedPreferences dirette
+        prefs.putBoolean("isServiceRunning", isRunning)
     }
 
     private fun updateToggleButtonText() {
@@ -276,7 +303,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkBatteryOptimizationOnFirstLaunch() {
-        // This flag is not sensitive, so keep using plain text SharedPreferences
+        // Questa flag non è sensibile, quindi continua a usare SharedPreferences normali
         val prefs = getSharedPreferences(getString(R.string.sms_forwarder_prefs), MODE_PRIVATE)
         val isFirstLaunch = prefs.getBoolean(getString(R.string.is_first_launch_pref_key), true)
 
@@ -286,7 +313,7 @@ class MainActivity : AppCompatActivity() {
             }
             PermissionExplanationDialog.showPermissionStatusDialog(this)
         } else {
-             if (!BatteryOptimizationManager.isIgnoringBatteryOptimizations(this)) { // Check if app is optimized when it shouldn't be
+            if (!BatteryOptimizationManager.isIgnoringBatteryOptimizations(this)) { // Check if app is optimized when it shouldn't be
                 showBatteryOptimizationReminder()
             }
         }
@@ -324,7 +351,6 @@ class MainActivity : AppCompatActivity() {
             if (batteryStatus.isOptimized) getString(R.string.battery_optimization_active) else getString(R.string.battery_optimization_not_restricted)
         )
 
-
         if (limitations.isNotEmpty()) {
             limitationsStatusTextView.text = getString(R.string.limitations_summary_formatted, getString(R.string.limitations_summary_prefix), limitations.joinToString(", "))
             limitationsStatusTextView.visibility = View.VISIBLE
@@ -345,7 +371,7 @@ class MainActivity : AppCompatActivity() {
         // }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-                 missing.add(getString(R.string.perm_post_notifications_name)) // Using the string from strings.xml
+                missing.add(getString(R.string.perm_post_notifications_name)) // Using the string from strings.xml
             }
         }
         return missing

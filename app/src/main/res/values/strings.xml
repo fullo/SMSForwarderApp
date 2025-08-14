@@ -25,6 +25,9 @@
     <string name="battery_permission_status">Battery Permission: %1$s</string>
     <string name="sms_from_sender">SMS from {sender}</string>
     <string name="default_body_format">From: {sender}\nTime: {time}\n\n{body}</string>
+    <string name="security_status">Stato sicurezza: Controllo in corso...</string>
+    <string name="secure_storage_enabled">Dati protetti con crittografia</string>
+    <string name="secure_storage_disabled">Crittografia non disponibile</string>
 
     <!-- Strings for Battery Optimization -->
     <string name="check_status">Check System Status</string>
@@ -64,6 +67,12 @@
     <string name="cd_configure_battery_optimization">Configure Battery Optimization</string>
     <string name="diagnostics_title">Diagnostics</string>
 
+    <!-- Stringhe per MainActivity -->
+    <string name="security_warning_title">Avviso di Sicurezza</string>
+    <string name="security_warning_message">La crittografia hardware non è disponibile su questo dispositivo. Le credenziali email verranno salvate senza crittografia avanzata. L\'app funzionerà normalmente ma con sicurezza ridotta.</string>
+    <string name="security_warning_understood">Ho capito</string>
+    <string name="service_started">SMS Forwarder Service Started</string>
+    <string name="service_stopped">SMS Forwarder Service Stopped</string>
 
     <!-- Strings for limitations -->
     <string name="limited_functionality">Limited functionality: %1$s</string>
@@ -188,4 +197,7 @@
     <string name="toast_sms_permission_already_granted">SMS permission already granted</string>
     <string name="toast_notification_permission_already_granted">Notification permission already granted</string>
 
+    <!-- Stringhe per SettingsActivity -->
+    <string name="email_password_recipient_required">Email, password, and recipient email must be configured</string>
+    <string name="settings_saved">Settings saved</string>
 </resources>

@@ -13,55 +13,29 @@ import androidx.core.app.NotificationCompat
 
 class SmsForwarderService : Service() {
     companion object {
-        private const val TAG = "SmsForwarderService"
         private const val NOTIFICATION_ID = 1
-        private const val CHANNEL_ID = "SmsForwarderChannel" // Internal ID, not for display
-        // PREFS_NAME and SERVICE_RUNNING_KEY removed, will use string resources
+        private const val CHANNEL_ID = "SmsForwarderChannel"
+        private const val SERVICE_RUNNING_KEY = "isServiceRunning"
     }
 
     private var wakeLock: PowerManager.WakeLock? = null
 
     override fun onCreate() {
         super.onCreate()
-        Log.d(TAG, "onCreate")
         acquireWakeLock()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Log.d(TAG, "onStartCommand")
-
         try {
             checkConfiguration()
             createNotificationChannel()
             val notification = createNotification()
-
-            // Start as foreground with appropriate type for Android 12+
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                startForeground(
-                    NOTIFICATION_ID,
-                    notification,
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                        ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
-                    } else {
-                        0
-                    }
-                )
-            } else {
-                startForeground(NOTIFICATION_ID, notification)
-            }
-
+            startForeground(NOTIFICATION_ID, notification)
             setServiceRunning(true)
-
-            // Schedule the monitoring worker
-            ServiceRestartWorker.schedule(this)
-
-            Log.d(TAG, "Service started successfully")
-            return START_STICKY // Restart if killed
-
-        } catch (e: Exception) {
-            Log.e(TAG, "Error starting service", e)
+            return START_STICKY
+        } catch (e: IllegalStateException) {
             stopSelf()
-            showErrorNotification(e.message ?: getString(R.string.notification_default_config_error_text))
+            showErrorNotification(e.message ?: "Configuration error")
             return START_NOT_STICKY
         }
     }
@@ -75,9 +49,7 @@ class SmsForwarderService : Service() {
             ).apply {
                 acquire(10 * 60 * 1000L) // 10 minutes max
             }
-            Log.d(TAG, "WakeLock acquired")
         } catch (e: Exception) {
-            Log.e(TAG, "Error acquiring WakeLock", e)
         }
     }
 
@@ -86,24 +58,17 @@ class SmsForwarderService : Service() {
             wakeLock?.let {
                 if (it.isHeld) {
                     it.release()
-                    Log.d(TAG, "WakeLock released")
                 }
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Error releasing WakeLock", e)
         }
     }
 
     private fun checkConfiguration() {
-        val sharedPrefs = getSharedPreferences(getString(R.string.sms_forwarder_prefs),
-            MODE_PRIVATE
-        )
-        val email = sharedPrefs.getString(getString(R.string.pref_key_email_address), "")
-        val password = sharedPrefs.getString(getString(R.string.pref_key_email_password), "")
-        val recipient = sharedPrefs.getString(getString(R.string.pref_key_recipient_email_address), "")
+        val prefs = SecurePreferencesManager.getInstance(this)
 
-        if (email.isNullOrEmpty() || password.isNullOrEmpty() || recipient.isNullOrEmpty()) {
-            throw IllegalStateException(getString(R.string.error_email_password_recipient_unconfigured))
+        if (!prefs.isEmailConfigured()) {
+            throw IllegalStateException("Email, password, and recipient email must be configured")
         }
     }
 
@@ -123,7 +88,6 @@ class SmsForwarderService : Service() {
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onDestroy() {
-        Log.d(TAG, "onDestroy")
         super.onDestroy()
 
         releaseWakeLock()
@@ -147,7 +111,6 @@ class SmsForwarderService : Service() {
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {
-        Log.w(TAG, "onTaskRemoved - App removed from recents")
         super.onTaskRemoved(rootIntent)
 
         // If the service should remain active, schedule a restart
@@ -155,7 +118,6 @@ class SmsForwarderService : Service() {
             MODE_PRIVATE
         )
         if (sharedPrefs.getBoolean(getString(R.string.pref_key_is_service_running), false)) {
-            Log.d(TAG, "Scheduling service restart")
 
             // Use AlarmManager for an immediate restart attempt
             val restartServiceIntent = Intent(applicationContext, SmsForwarderService::class.java)
@@ -215,10 +177,7 @@ class SmsForwarderService : Service() {
     }
 
     private fun setServiceRunning(isRunning: Boolean) {
-        val sharedPrefs = getSharedPreferences(getString(R.string.sms_forwarder_prefs),
-            MODE_PRIVATE
-        )
-        sharedPrefs.edit().putBoolean(getString(R.string.pref_key_is_service_running), isRunning).apply()
-        Log.d(TAG, "Service status saved: $isRunning") // Log message with dynamic content
+        val prefs = SecurePreferencesManager.getInstance(this)
+        prefs.putBoolean(SERVICE_RUNNING_KEY, isRunning)
     }
 }
