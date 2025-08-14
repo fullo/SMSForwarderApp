@@ -64,10 +64,10 @@ class ServiceRestartWorker(
             Log.d(TAG, "Checking service status...")
 
             val sharedPrefs = applicationContext.getSharedPreferences(
-                "SMSForwarderPrefs", // Internal key
+                applicationContext.getString(R.string.sms_forwarder_prefs),
                 Context.MODE_PRIVATE
             )
-            val shouldBeRunning = sharedPrefs.getBoolean("isServiceRunning", false) // Internal key
+            val shouldBeRunning = sharedPrefs.getBoolean(applicationContext.getString(R.string.pref_key_is_service_running), false)
 
             if (shouldBeRunning) {
                 if (!isServiceRunning()) {

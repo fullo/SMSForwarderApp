@@ -7,14 +7,14 @@ plugins {
 
 android {
     namespace = "com.apropos.smsforwarder"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.apropos.smsforwarder"
         minSdk = 28
         targetSdk = 33
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "1.5"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -39,17 +39,17 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "2.0.0"
+        kotlinCompilerExtensionVersion = "1.5.10" // Updated version
     }
     packaging {
         resources {
@@ -98,7 +98,11 @@ dependencies {
     implementation("androidx.recyclerview:recyclerview:1.3.1")
 
     // Security
-    implementation("androidx.security:security-crypto:1.0.0") // A stable version
+    implementation("androidx.security:security-crypto:1.1.0"){
+        version {
+            strictly("1.1.0")
+        }
+    }
     implementation("com.google.crypto.tink:tink-android:1.7.0")
 
     testImplementation("junit:junit:4.13.2")

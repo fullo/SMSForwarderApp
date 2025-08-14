@@ -67,24 +67,21 @@
 
     <!-- Strings for limitations -->
     <string name="limited_functionality">Limited functionality: %1$s</string>
-    <string name="details">Details</string>
+    <string name="details_button">Details</string>
 
     <!-- Preference Keys -->
     <string name="sms_forwarder_prefs" translatable="false">SMSForwarderPrefs</string>
-    <string name="email_pref_key" translatable="false">email</string>
-    <string name="password_pref_key" translatable="false">password</string>
-    <string name="recipient_pref_key" translatable="false">recipient</string>
-    <string name="is_service_running_pref_key" translatable="false">isServiceRunning</string>
     <string name="is_first_launch_pref_key" translatable="false">is_first_launch</string>
     <string name="service_restart_count_pref_key" translatable="false">service_restart_count</string>
     <string name="last_restart_time_pref_key" translatable="false">last_restart_time</string>
 
-    <!-- Preference Keys for EncryptedSharedPreferences -->
-    <string name="sms_forwarder_prefs_encrypted" translatable="false">SmsForwarderPrefsEncrypted</string>
+    <!-- Preference Keys for EncryptedSharedPreferences (assuming encryption is removed or these specific keys are now primary) -->
     <string name="pref_key_email_address" translatable="false">email_address</string>
     <string name="pref_key_email_password" translatable="false">email_password</string>
     <string name="pref_key_recipient_email_address" translatable="false">recipient_email_address</string>
-    <string name="pref_key_migration_to_encrypted_done" translatable="false">migration_to_encrypted_prefs_done</string>
+    <string name="pref_key_subject_format">subject_format</string>
+    <string name="pref_key_body_format">body_format</string>
+    <string name="pref_key_is_service_running">is_service_running</string>
 
     <!-- Strings extracted from MainActivity.kt (Ensure no duplicates with Preference Keys) -->
     <string name="granted">Granted</string>
@@ -94,14 +91,14 @@
     <string name="sms_forwarder_service_started">SMS Forwarder Service Started</string>
     <string name="sms_forwarder_service_stopped">SMS Forwarder Service Stopped</string>
     <string name="battery_optimization_active_warning">⚠️ Battery optimization active. The app may not work correctly.</string>
-    <string name="configure_button">Configure</string>
+    <!-- Removed: configure_button (now uses @string/configure) -->
     <string name="service_restarted_too_often_message">The service has been restarted %1$d times. Consider configuring battery optimizations.</string>
     <string name="service_stability_warning_title">⚠️ Service Stability</string>
     <string name="ignore_button">Ignore</string>
     <string name="package_uri_prefix">package:</string>
     <string name="limited_functionality_one_restriction">Limited functionality: %1$d active restriction</string>
     <string name="limited_functionality_multiple_restrictions">Limited functionality: %1$d active restrictions</string>
-    <string name="details_button">Details</string>
+    <!-- Removed: details (now uses @string/details_button) -->
     <string name="missing_critical_permissions_summary">%1$d missing critical permissions</string>
     <string name="battery_optimization_active">Battery optimization active</string>
     <string name="limitations_summary_prefix">⚠️ </string>
@@ -120,7 +117,7 @@
     <string name="manual_check_email_configured_label">Email configured: </string>
     <string name="manual_check_password_configured_label">Password configured: </string>
     <string name="manual_check_recipient_configured_label">Recipient configured: </string>
-    <string name="manual_check_dialog_title">System Check</string>
+    <!-- Removed: manual_check_dialog_title (now uses @string/system_check_title) -->
     <string name="ok_button">OK</string>
     <string name="limitations_summary_formatted">%1$s %2$s</string>
 
@@ -188,5 +185,8 @@
     <string name="notification_service_active_text">Service active - SMS forwarding enabled</string>
     <string name="notification_title_error">SMS Forwarder - Error</string>
     <string name="notification_default_config_error_text">Configuration error</string>
+
+    <string name="toast_sms_permission_already_granted">SMS permission already granted</string>
+    <string name="toast_notification_permission_already_granted">Notification permission already granted</string>
 
 </resources>

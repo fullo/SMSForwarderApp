@@ -19,9 +19,9 @@ object PermissionExplanationDialog {
 
     data class PermissionInfo(
         val permission: String,
-        @StringRes val nameResId: Int,
-        @StringRes val reasonResId: Int,
-        @StringRes val impactResId: Int, // What doesn't work without this permission
+        @param:StringRes val nameResId: Int,
+        @param:StringRes val reasonResId: Int,
+        @param:StringRes val impactResId: Int, // What doesn't work without this permission
         val critical: Boolean = false
     )
 

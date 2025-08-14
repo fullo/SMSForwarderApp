@@ -50,12 +50,15 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     private fun loadSettings() {
-        val sharedPrefs = getSharedPreferences("SMSForwarderPrefs", MODE_PRIVATE)
-        emailEditText.setText(sharedPrefs.getString("email", ""))
-        passwordEditText.setText(sharedPrefs.getString("password", ""))
-        recipientEditText.setText(sharedPrefs.getString("recipient", ""))
-        subjectFormatEditText.setText(sharedPrefs.getString("subjectFormat", "SMS from {sender}"))
-        bodyFormatEditText.setText(sharedPrefs.getString("bodyFormat", "From: {sender}\nTime: {time}\n\n{body}"))
+        val prefsFile = getString(R.string.sms_forwarder_prefs)
+        val sharedPrefs = getSharedPreferences(prefsFile, MODE_PRIVATE)
+
+        emailEditText.setText(sharedPrefs.getString(getString(R.string.pref_key_email_address), ""))
+        passwordEditText.setText(sharedPrefs.getString(getString(R.string.pref_key_email_password), ""))
+        recipientEditText.setText(sharedPrefs.getString(getString(R.string.pref_key_recipient_email_address), ""))
+        // Consider defining default values in strings.xml as well for consistency
+        subjectFormatEditText.setText(sharedPrefs.getString(getString(R.string.pref_key_subject_format), "SMS from {sender}"))
+        bodyFormatEditText.setText(sharedPrefs.getString(getString(R.string.pref_key_body_format), "From: {sender}\nTime: {time}\n\n{body}"))
     }
 
     private fun saveSettings(): Boolean {
@@ -70,13 +73,14 @@ class SettingsActivity : AppCompatActivity() {
             return false
         }
 
-        val sharedPrefs = getSharedPreferences("SMSForwarderPrefs", MODE_PRIVATE)
+        val prefsFile = getString(R.string.sms_forwarder_prefs)
+        val sharedPrefs = getSharedPreferences(prefsFile, MODE_PRIVATE)
         sharedPrefs.edit().apply {
-            putString("email", email)
-            putString("password", password)
-            putString("recipient", recipient)
-            putString("subjectFormat", subjectFormat)
-            putString("bodyFormat", bodyFormat)
+            putString(getString(R.string.pref_key_email_address), email)
+            putString(getString(R.string.pref_key_email_password), password)
+            putString(getString(R.string.pref_key_recipient_email_address), recipient)
+            putString(getString(R.string.pref_key_subject_format), subjectFormat)
+            putString(getString(R.string.pref_key_body_format), bodyFormat)
             apply()
         }
 

@@ -21,22 +21,22 @@ object EmailSender {
         time: String
     ): Result<Unit> = withContext(Dispatchers.IO) {
         try {
-            val sharedPrefs = context.getSharedPreferences("SMSForwarderPrefs", Context.MODE_PRIVATE)
-            val email = sharedPrefs.getString("email", "") ?: ""
-            val password = sharedPrefs.getString("password", "") ?: ""
-            val recipient = sharedPrefs.getString("recipient", "") ?: ""
-            val subjectFormat = sharedPrefs.getString("subjectFormat", "SMS from {sender}") ?: "SMS from {sender}"
-            val bodyFormat = sharedPrefs.getString("bodyFormat", "From: {sender}\nTime: {time}\n\n{body}") ?: "From: {sender}\nTime: {time}\n\n{body}"
+            val sharedPrefs = context.getSharedPreferences(context.getString(R.string.sms_forwarder_prefs), Context.MODE_PRIVATE)
+            val email = sharedPrefs.getString(context.getString(R.string.pref_key_email_address), "") ?: ""
+            val password = sharedPrefs.getString(context.getString(R.string.pref_key_email_password), "") ?: ""
+            val recipient = sharedPrefs.getString(context.getString(R.string.pref_key_recipient_email_address), "") ?: ""
+            val subjectFormat = sharedPrefs.getString(context.getString(R.string.pref_key_subject_format), "SMS from {sender}") ?: "SMS from {sender}"
+            val bodyFormat = sharedPrefs.getString(context.getString(R.string.pref_key_body_format), "From: {sender}\nTime: {time}\n\n{body}") ?: "From: {sender}\nTime: {time}\n\n{body}"
 
             if (email.isEmpty() || password.isEmpty() || recipient.isEmpty()) {
-                throw IllegalStateException("Email, password, and recipient email must be configured")
+                throw IllegalStateException("Email, password, and recipient email must be configured") // Consider using a string resource here
             }
 
             val props = Properties()
             props["mail.smtp.auth"] = "true"
             props["mail.smtp.starttls.enable"] = "true"
-            props["mail.smtp.host"] = "smtp.gmail.com"
-            props["mail.smtp.port"] = "587"
+            props["mail.smtp.host"] = "smtp.gmail.com" // Consider making these configurable
+            props["mail.smtp.port"] = "587" // Consider making these configurable
 
             val session = Session.getInstance(props, object : Authenticator() {
                 override fun getPasswordAuthentication(): PasswordAuthentication {

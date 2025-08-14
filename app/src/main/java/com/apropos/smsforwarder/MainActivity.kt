@@ -1,4 +1,3 @@
-// app/src/main/java/com/apropos/smsforwarder/MainActivity.kt
 package com.apropos.smsforwarder
 
 import android.Manifest
@@ -18,11 +17,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.edit // KTX for SharedPreferences
-import androidx.security.crypto.EncryptedSharedPreferences // Added import
-import androidx.security.crypto.MasterKey // Added import
 import com.google.android.material.snackbar.Snackbar
 import android.view.View
-// import androidx.appcompat.app.AlertDialog // No longer used directly for config options
 
 class MainActivity : AppCompatActivity() {
     companion object {
@@ -95,16 +91,33 @@ class MainActivity : AppCompatActivity() {
         }
 
         checkStatusButton.setOnClickListener {
+            if (checkPermissions()) {
+                requestPermissions()
+            }
             displayDiagnosticInfo() // Display diagnostic info in the TextView
         }
 
         // Setup listeners for gear buttons
         smsPermissionGearButton.setOnClickListener {
-            openAppSettings()
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, getString(R.string.toast_sms_permission_already_granted), Toast.LENGTH_SHORT).show()
+            } else {
+                openAppSettings()
+            }
         }
 
         notificationPermissionGearButton.setOnClickListener {
-            openAppSettings()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, getString(R.string.toast_notification_permission_already_granted), Toast.LENGTH_SHORT).show()
+                } else {
+                    openAppSettings()
+                }
+            } else {
+                // For versions below Tiramisu, POST_NOTIFICATIONS permission doesn't exist/isn't runtime.
+                // Clicking the gear icon will take them to app settings, which is reasonable.
+                openAppSettings()
+            }
         }
 
         batteryOptimizationGearButton.setOnClickListener {
@@ -129,98 +142,23 @@ class MainActivity : AppCompatActivity() {
         displayDiagnosticInfo() // Refresh diagnostic info
     }
 
-    // --- Start of EncryptedSharedPreferences Implementation ---
-
-    private fun getEncryptedSharedPreferences(): SharedPreferences {
-        val masterKey = MasterKey.Builder(applicationContext)
-            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
-            .build()
-
-        val sharedPreferences = EncryptedSharedPreferences.create(
-            applicationContext,
-            getString(R.string.sms_forwarder_prefs_encrypted), // Use the new encrypted prefs file name
-            masterKey,
-            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-        )
-
-        // Perform migration if needed
-        migrateToEncryptedPrefsIfNeeded(sharedPreferences)
-
-        return sharedPreferences
-    }
-
-    private fun migrateToEncryptedPrefsIfNeeded(encryptedPrefs: SharedPreferences) {
-        val migrationDoneKey = getString(R.string.pref_key_migration_to_encrypted_done)
-        if (!encryptedPrefs.getBoolean(migrationDoneKey, false)) {
-            // Migration not done, attempt it
-            val oldPlainTextPrefs = getSharedPreferences(getString(R.string.sms_forwarder_prefs), MODE_PRIVATE)
-
-            // Use new keys for SharedPreferences
-            val emailKey = getString(R.string.pref_key_email_address)
-            val passwordKey = getString(R.string.pref_key_email_password)
-            val recipientKey = getString(R.string.pref_key_recipient_email_address)
-
-            // Old keys used to read from plain text preferences
-            val oldEmailKey = getString(R.string.email_pref_key)
-            val oldPasswordKey = getString(R.string.password_pref_key)
-            val oldRecipientKey = getString(R.string.recipient_pref_key)
-
-
-            // Check if old preferences have a password (good indicator that there's something to migrate)
-            if (oldPlainTextPrefs.contains(oldPasswordKey)) {
-                val email = oldPlainTextPrefs.getString(oldEmailKey, null)
-                val password = oldPlainTextPrefs.getString(oldPasswordKey, null)
-                val recipient = oldPlainTextPrefs.getString(oldRecipientKey, null)
-
-                if (password != null) { // Ensure password exists
-                    encryptedPrefs.edit {
-                        putString(emailKey, email)
-                        putString(passwordKey, password)
-                        putString(recipientKey, recipient)
-                        putBoolean(migrationDoneKey, true) // Mark migration as done in encrypted prefs
-                    }
-
-                    // Clear the old plain text preferences, especially the password
-                    oldPlainTextPrefs.edit {
-                        remove(oldEmailKey)
-                        remove(oldPasswordKey)
-                        remove(oldRecipientKey)
-                        // Optionally clear other related settings if they were also sensitive
-                    }
-                } else {
-                    // Password was null in old prefs, mark migration done to avoid re-checking.
-                     encryptedPrefs.edit { putBoolean(migrationDoneKey, true) }
-                }
-            } else {
-                // No password in old prefs, or old prefs don't exist.
-                // Mark migration as done anyway to avoid re-checking every time.
-                encryptedPrefs.edit {
-                    putBoolean(migrationDoneKey, true)
-                }
-            }
-        }
-    }
-
-    // --- End of EncryptedSharedPreferences Implementation ---
-
-
     private fun updateUIVisibilityAndStatus() {
         updatePermissionStatusText()
+        updateToggleButtonText()
         checkPreferencesAndUpdateButton() // This also calls updateToggleButtonText()
         showLimitationsIndicator()
-        // displayDiagnosticInfo() is called separately in onResume and onCreate
     }
 
 
     private fun openAppSettings() {
+        Toast.makeText(this, "Gear icon pressed!", Toast.LENGTH_SHORT).show() // For testing
         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
         val uri = Uri.fromParts(getString(R.string.package_uri_prefix), packageName, null)
         intent.data = uri
         startActivity(intent)
     }
 
-    private fun updatePermissionStatusText() { // Renamed from updatePermissionStatus
+    private fun updatePermissionStatusText() {
         val smsPermissionGranted = ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_GRANTED
         smsPermissionStatus.text = getString(R.string.sms_permission_status, if (smsPermissionGranted) getString(R.string.granted) else getString(R.string.not_granted))
 
@@ -230,14 +168,13 @@ class MainActivity : AppCompatActivity() {
         } else {
             notificationPermissionStatus.text = getString(R.string.notification_permission_status, getString(R.string.not_required))
         }
-        // showLimitationsIndicator() is called by updateUIVisibilityAndStatus
     }
 
     private fun checkPreferencesAndUpdateButton(): Boolean {
-        // Use the new getEncryptedSharedPreferences method
-        val sharedPrefs = getEncryptedSharedPreferences()
+        // Use plain SharedPreferences
+        val sharedPrefs = getSharedPreferences(getString(R.string.sms_forwarder_prefs), MODE_PRIVATE)
 
-        // Use the new preference keys defined in strings.xml
+        // Use the preference keys defined in strings.xml (ensure these are the non-encrypted ones if they differed)
         val email = sharedPrefs.getString(getString(R.string.pref_key_email_address), "")
         val password = sharedPrefs.getString(getString(R.string.pref_key_email_password), "")
         val recipient = sharedPrefs.getString(getString(R.string.pref_key_recipient_email_address), "")
@@ -318,14 +255,14 @@ class MainActivity : AppCompatActivity() {
     private fun isServiceRunning(): Boolean {
         // This flag is not sensitive, so keep using plain text SharedPreferences
         val sharedPrefs = getSharedPreferences(getString(R.string.sms_forwarder_prefs), MODE_PRIVATE)
-        return sharedPrefs.getBoolean(getString(R.string.is_service_running_pref_key), false)
+        return sharedPrefs.getBoolean(getString(R.string.pref_key_is_service_running), false)
     }
 
     private fun setServiceRunning(isRunning: Boolean) {
         // This flag is not sensitive, so keep using plain text SharedPreferences
         val sharedPrefs = getSharedPreferences(getString(R.string.sms_forwarder_prefs), MODE_PRIVATE)
         sharedPrefs.edit {
-            putBoolean(getString(R.string.is_service_running_pref_key), isRunning)
+            putBoolean(getString(R.string.pref_key_is_service_running), isRunning)
             // apply() is implicitly called by KTX extension if it's the last operation
         }
     }
@@ -367,7 +304,7 @@ class MainActivity : AppCompatActivity() {
                 findViewById(android.R.id.content),
                 getString(R.string.battery_optimization_active_warning),
                 Snackbar.LENGTH_LONG
-            ).setAction(getString(R.string.configure_button)) {
+            ).setAction(getString(R.string.configure)) { // Changed from configure_button
                 BatteryOptimizationManager.openOptimizationSettings(this)
             }.show()
         }
@@ -378,7 +315,7 @@ class MainActivity : AppCompatActivity() {
         val status = BatteryOptimizationManager.getOptimizationStatus(this)
         if (status.isOptimized && BatteryOptimizationManager.shouldShowOptimizationDialog(this)) {
             // Banner might be too intrusive with gear icons, consider removing or making less frequent
-            // Possibly call showBatteryOptimizationReminder() here or a similar less intrusive UI
+            showBatteryOptimizationReminder()
         }
     }
 

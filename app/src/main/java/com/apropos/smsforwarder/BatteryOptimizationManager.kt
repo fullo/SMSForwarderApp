@@ -123,10 +123,10 @@ object BatteryOptimizationManager {
                 openOptimizationSettings(activity, status.manufacturer)
             }
             .setNegativeButton(activity.getString(R.string.continue_anyway)) { _, _ ->
-                saveUserChoice(activity, "partial_mode_accepted")
+                saveUserChoice(activity, activity.getString(R.string.battery_optimization_active_warning)) // Use string res
             }
             .setNeutralButton(activity.getString(R.string.dont_ask_again)) { _, _ ->
-                saveUserChoice(activity, "dont_ask_optimization")
+                saveUserChoice(activity, activity.getString(R.string.dont_ask_again)) // Use string res
             }
             .setCancelable(true)
             .show()
@@ -277,25 +277,28 @@ object BatteryOptimizationManager {
         ).isNotEmpty()
     }
 
-    private fun saveUserChoice(context: Context, choice: String) {
-        context.getSharedPreferences("SMSForwarderPrefs", Context.MODE_PRIVATE)
+    private fun saveUserChoice(context: Context, choiceKey: String) { // choiceKey is now a resolved string
+        context.getSharedPreferences(context.getString(R.string.sms_forwarder_prefs), Context.MODE_PRIVATE)
             .edit()
-            .putBoolean(choice, true)
-            .putLong("${choice}_time", System.currentTimeMillis())
+            .putBoolean(choiceKey, true)
+            .putLong("${choiceKey}_time", System.currentTimeMillis()) // Suffix '_time' to the resolved key
             .apply()
     }
 
     fun shouldShowOptimizationDialog(context: Context): Boolean {
-        val prefs = context.getSharedPreferences("SMSForwarderPrefs", Context.MODE_PRIVATE)
+        val prefs = context.getSharedPreferences(context.getString(R.string.sms_forwarder_prefs), Context.MODE_PRIVATE)
+
+        val dontAskKey = context.getString(R.string.dont_ask_again)
+        val partialModeKey = context.getString(R.string.battery_optimization_active_warning)
 
         // If the user chose "Don't ask again"
-        if (prefs.getBoolean("dont_ask_optimization", false)) {
+        if (prefs.getBoolean(dontAskKey, false)) {
             return false
         }
 
         // If they accepted partial mode, show only every 7 days
-        if (prefs.getBoolean("partial_mode_accepted", false)) {
-            val lastTime = prefs.getLong("partial_mode_accepted_time", 0)
+        if (prefs.getBoolean(partialModeKey, false)) {
+            val lastTime = prefs.getLong("${partialModeKey}_time", 0) // Suffix '_time'
             val daysSince = (System.currentTimeMillis() - lastTime) / (1000 * 60 * 60 * 24)
             return daysSince >= 7
         }

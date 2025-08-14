@@ -15,8 +15,7 @@ class SmsForwarderService : Service() {
         private const val TAG = "SmsForwarderService"
         private const val NOTIFICATION_ID = 1
         private const val CHANNEL_ID = "SmsForwarderChannel" // Internal ID, not for display
-        private const val PREFS_NAME = "SMSForwarderPrefs" // Internal key
-        private const val SERVICE_RUNNING_KEY = "isServiceRunning" // Internal key
+        // PREFS_NAME and SERVICE_RUNNING_KEY removed, will use string resources
     }
 
     private var wakeLock: PowerManager.WakeLock? = null
@@ -95,10 +94,10 @@ class SmsForwarderService : Service() {
     }
 
     private fun checkConfiguration() {
-        val sharedPrefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        val email = sharedPrefs.getString("email", "")
-        val password = sharedPrefs.getString("password", "")
-        val recipient = sharedPrefs.getString("recipient", "")
+        val sharedPrefs = getSharedPreferences(getString(R.string.sms_forwarder_prefs), Context.MODE_PRIVATE)
+        val email = sharedPrefs.getString(getString(R.string.pref_key_email_address), "")
+        val password = sharedPrefs.getString(getString(R.string.pref_key_email_password), "")
+        val recipient = sharedPrefs.getString(getString(R.string.pref_key_recipient_email_address), "")
 
         if (email.isNullOrEmpty() || password.isNullOrEmpty() || recipient.isNullOrEmpty()) {
             throw IllegalStateException(getString(R.string.error_email_password_recipient_unconfigured))
@@ -136,8 +135,8 @@ class SmsForwarderService : Service() {
         setServiceRunning(false)
 
         // Cancel the worker if the service was stopped intentionally
-        val sharedPrefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        if (!sharedPrefs.getBoolean(SERVICE_RUNNING_KEY, false)) {
+        val sharedPrefs = getSharedPreferences(getString(R.string.sms_forwarder_prefs), Context.MODE_PRIVATE)
+        if (!sharedPrefs.getBoolean(getString(R.string.pref_key_is_service_running), false)) {
             ServiceRestartWorker.cancel(this)
         }
     }
@@ -147,8 +146,8 @@ class SmsForwarderService : Service() {
         super.onTaskRemoved(rootIntent)
 
         // If the service should remain active, schedule a restart
-        val sharedPrefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        if (sharedPrefs.getBoolean(SERVICE_RUNNING_KEY, false)) {
+        val sharedPrefs = getSharedPreferences(getString(R.string.sms_forwarder_prefs), Context.MODE_PRIVATE)
+        if (sharedPrefs.getBoolean(getString(R.string.pref_key_is_service_running), false)) {
             Log.d(TAG, "Scheduling service restart")
 
             // Use AlarmManager for an immediate restart attempt
@@ -209,8 +208,8 @@ class SmsForwarderService : Service() {
     }
 
     private fun setServiceRunning(isRunning: Boolean) {
-        val sharedPrefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-        sharedPrefs.edit().putBoolean(SERVICE_RUNNING_KEY, isRunning).apply()
+        val sharedPrefs = getSharedPreferences(getString(R.string.sms_forwarder_prefs), Context.MODE_PRIVATE)
+        sharedPrefs.edit().putBoolean(getString(R.string.pref_key_is_service_running), isRunning).apply()
         Log.d(TAG, "Service status saved: $isRunning") // Log message with dynamic content
     }
 }
