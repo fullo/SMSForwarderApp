@@ -2,7 +2,6 @@ package com.apropos.smsforwarder
 
 import android.Manifest
 import android.content.Intent
-import android.content.SharedPreferences // Added import
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
@@ -151,7 +150,6 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun openAppSettings() {
-        Toast.makeText(this, "Gear icon pressed!", Toast.LENGTH_SHORT).show() // For testing
         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
         val uri = Uri.fromParts(getString(R.string.package_uri_prefix), packageName, null)
         intent.data = uri
@@ -235,6 +233,7 @@ class MainActivity : AppCompatActivity() {
             showLimitationsIndicator() // Update limitations part
             checkPreferencesAndUpdateButton() // Ensure UI is up-to-date
             displayDiagnosticInfo() // Refresh diagnostic info after permission change
+            Toast.makeText(this, getString(R.string.check_status), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -263,7 +262,6 @@ class MainActivity : AppCompatActivity() {
         val sharedPrefs = getSharedPreferences(getString(R.string.sms_forwarder_prefs), MODE_PRIVATE)
         sharedPrefs.edit {
             putBoolean(getString(R.string.pref_key_is_service_running), isRunning)
-            // apply() is implicitly called by KTX extension if it's the last operation
         }
     }
 
@@ -307,15 +305,6 @@ class MainActivity : AppCompatActivity() {
             ).setAction(getString(R.string.configure)) { // Changed from configure_button
                 BatteryOptimizationManager.openOptimizationSettings(this)
             }.show()
-        }
-    }
-
-
-    private fun checkOptimizationsIfNeeded() { // Consider removing or refactoring this
-        val status = BatteryOptimizationManager.getOptimizationStatus(this)
-        if (status.isOptimized && BatteryOptimizationManager.shouldShowOptimizationDialog(this)) {
-            // Banner might be too intrusive with gear icons, consider removing or making less frequent
-            showBatteryOptimizationReminder()
         }
     }
 

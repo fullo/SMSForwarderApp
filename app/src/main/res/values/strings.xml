@@ -117,7 +117,6 @@
     <string name="manual_check_email_configured_label">Email configured: </string>
     <string name="manual_check_password_configured_label">Password configured: </string>
     <string name="manual_check_recipient_configured_label">Recipient configured: </string>
-    <!-- Removed: manual_check_dialog_title (now uses @string/system_check_title) -->
     <string name="ok_button">OK</string>
     <string name="limitations_summary_formatted">%1$s %2$s</string>
 

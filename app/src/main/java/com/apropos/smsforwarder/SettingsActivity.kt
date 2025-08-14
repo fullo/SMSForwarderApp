@@ -1,7 +1,6 @@
 // app/src/main/java/com/apropos/smsforwarder/SettingsActivity.kt
 package com.apropos.smsforwarder
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText

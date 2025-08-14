@@ -63,14 +63,12 @@ object PermissionExplanationDialog {
         )
     )
 
-    /**
-     * Shows a dialog with an explanation and impact of partial functionality.
-     */
-    fun showPermissionStatusDialog(activity: AppCompatActivity) {
+    fun buildPermissionInfoMessages(activity: AppCompatActivity): String {
+
         val missingPermissions = getMissingPermissions(activity)
         val grantedPermissions = getGrantedPermissions(activity)
 
-        val message = buildString {
+        return buildString {
             if (grantedPermissions.isNotEmpty()) {
                 appendLine(activity.getString(R.string.dialog_perms_granted_header))
                 grantedPermissions.forEach { info ->
@@ -100,9 +98,20 @@ object PermissionExplanationDialog {
             }
         }
 
+    }
+
+    /**
+     * Shows a dialog with an explanation and impact of partial functionality.
+     */
+    fun showPermissionStatusDialog(activity: AppCompatActivity) {
+        val missingPermissions = getMissingPermissions(activity)
+        val grantedPermissions = getGrantedPermissions(activity)
+
+        val message = buildPermissionInfoMessages(activity)
+
         val dialogBuilder = MaterialAlertDialogBuilder(activity)
             .setTitle(activity.getString(R.string.permission_status_title)) // Reusing existing
-            .setMessage(message.toString())
+            .setMessage(message)
 
         if (missingPermissions.isNotEmpty()) {
             dialogBuilder.setPositiveButton(activity.getString(R.string.grant_permissions)) { _, _ -> // Reusing existing
@@ -134,6 +143,9 @@ object PermissionExplanationDialog {
             appendLine()
             appendLine(activity.getString(R.string.manual_check_perms_granted_count, granted.size, permissionExplanations.size))
             appendLine(activity.getString(R.string.manual_check_perms_missing_count, missing.size, permissionExplanations.size))
+
+            appendLine()
+            appendLine(buildPermissionInfoMessages(activity))
 
             if (missing.isNotEmpty()) {
                 appendLine()
@@ -197,7 +209,7 @@ object PermissionExplanationDialog {
     private fun hasPermission(context: Context, permission: String): Boolean {
         return try {
             context.checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             // Should not happen if manifest is correct, but as a fallback, assume not granted or issue
             false
         }
@@ -228,7 +240,7 @@ object PermissionExplanationDialog {
 
         AlertDialog.Builder(activity)
             .setTitle(activity.getString(R.string.app_not_working)) // Reusing existing
-            .setMessage(message.toString())
+            .setMessage(message)
             .setPositiveButton(activity.getString(R.string.understood)) { _, _ -> } // Reusing existing
             .show()
     }

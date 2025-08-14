@@ -99,40 +99,6 @@ object BatteryOptimizationManager {
     }
 
     /**
-     * Shows a non-invasive informational dialog
-     */
-    fun showOptimizationInfo(activity: AppCompatActivity, status: OptimizationStatus) {
-        if (!status.isOptimized) {
-            return // All good, show nothing
-        }
-
-        val message = buildString {
-            appendLine(activity.getString(R.string.optimization_info_dialog_message_limitations))
-            appendLine()
-            status.limitations.forEach { limitation ->
-                appendLine(limitation) // These are already localized strings from getOptimizationStatus
-            }
-            appendLine()
-            appendLine(activity.getString(R.string.optimization_info_dialog_message_disable_optimizations))
-        }
-
-        AlertDialog.Builder(activity)
-            .setTitle(activity.getString(R.string.optimization_info_dialog_title))
-            .setMessage(message.toString())
-            .setPositiveButton(activity.getString(R.string.configure_now)) { _, _ ->
-                openOptimizationSettings(activity, status.manufacturer)
-            }
-            .setNegativeButton(activity.getString(R.string.continue_anyway)) { _, _ ->
-                saveUserChoice(activity, activity.getString(R.string.battery_optimization_active_warning)) // Use string res
-            }
-            .setNeutralButton(activity.getString(R.string.dont_ask_again)) { _, _ ->
-                saveUserChoice(activity, activity.getString(R.string.dont_ask_again)) // Use string res
-            }
-            .setCancelable(true)
-            .show()
-    }
-
-    /**
      * Opens the appropriate settings for the manufacturer
      */
     fun openOptimizationSettings(activity: AppCompatActivity, manufacturer: Manufacturer? = null) {

@@ -7,6 +7,7 @@ import android.content.pm.ServiceInfo
 import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
+import android.os.SystemClock
 import android.util.Log
 import androidx.core.app.NotificationCompat
 
@@ -67,7 +68,7 @@ class SmsForwarderService : Service() {
 
     private fun acquireWakeLock() {
         try {
-            val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
+            val powerManager = getSystemService(POWER_SERVICE) as PowerManager
             wakeLock = powerManager.newWakeLock(
                 PowerManager.PARTIAL_WAKE_LOCK,
                 "SMSForwarder::WakeLock" // Internal WakeLock tag
@@ -94,7 +95,9 @@ class SmsForwarderService : Service() {
     }
 
     private fun checkConfiguration() {
-        val sharedPrefs = getSharedPreferences(getString(R.string.sms_forwarder_prefs), Context.MODE_PRIVATE)
+        val sharedPrefs = getSharedPreferences(getString(R.string.sms_forwarder_prefs),
+            MODE_PRIVATE
+        )
         val email = sharedPrefs.getString(getString(R.string.pref_key_email_address), "")
         val password = sharedPrefs.getString(getString(R.string.pref_key_email_password), "")
         val recipient = sharedPrefs.getString(getString(R.string.pref_key_recipient_email_address), "")
@@ -105,7 +108,7 @@ class SmsForwarderService : Service() {
     }
 
     private fun showErrorNotification(errorMessage: String) {
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager: NotificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle(getString(R.string.notification_title_error))
             .setContentText(errorMessage)
@@ -135,7 +138,9 @@ class SmsForwarderService : Service() {
         setServiceRunning(false)
 
         // Cancel the worker if the service was stopped intentionally
-        val sharedPrefs = getSharedPreferences(getString(R.string.sms_forwarder_prefs), Context.MODE_PRIVATE)
+        val sharedPrefs = getSharedPreferences(getString(R.string.sms_forwarder_prefs),
+            MODE_PRIVATE
+        )
         if (!sharedPrefs.getBoolean(getString(R.string.pref_key_is_service_running), false)) {
             ServiceRestartWorker.cancel(this)
         }
@@ -146,7 +151,9 @@ class SmsForwarderService : Service() {
         super.onTaskRemoved(rootIntent)
 
         // If the service should remain active, schedule a restart
-        val sharedPrefs = getSharedPreferences(getString(R.string.sms_forwarder_prefs), Context.MODE_PRIVATE)
+        val sharedPrefs = getSharedPreferences(getString(R.string.sms_forwarder_prefs),
+            MODE_PRIVATE
+        )
         if (sharedPrefs.getBoolean(getString(R.string.pref_key_is_service_running), false)) {
             Log.d(TAG, "Scheduling service restart")
 
@@ -161,10 +168,10 @@ class SmsForwarderService : Service() {
                 PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
             )
 
-            val alarmService = applicationContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            val alarmService = applicationContext.getSystemService(ALARM_SERVICE) as AlarmManager
             alarmService.set(
                 AlarmManager.ELAPSED_REALTIME,
-                android.os.SystemClock.elapsedRealtime() + 1000, // 1 second delay
+                SystemClock.elapsedRealtime() + 1000, // 1 second delay
                 restartServicePendingIntent
             )
         }
@@ -208,7 +215,9 @@ class SmsForwarderService : Service() {
     }
 
     private fun setServiceRunning(isRunning: Boolean) {
-        val sharedPrefs = getSharedPreferences(getString(R.string.sms_forwarder_prefs), Context.MODE_PRIVATE)
+        val sharedPrefs = getSharedPreferences(getString(R.string.sms_forwarder_prefs),
+            MODE_PRIVATE
+        )
         sharedPrefs.edit().putBoolean(getString(R.string.pref_key_is_service_running), isRunning).apply()
         Log.d(TAG, "Service status saved: $isRunning") // Log message with dynamic content
     }
