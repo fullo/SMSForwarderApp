@@ -150,9 +150,9 @@ app/src/main/res/
 - Proper **battery optimization** handling with notification channel management
 
 ### Security Considerations
-- Email credentials stored in **SharedPreferences** (unencrypted)
+- ~Email credentials stored in **SharedPreferences** (unencrypted)~
 - SMS content temporarily stored in local Room database
-- Future versions will implement credential encryption with Android Keystore
+- from 1.6 version has been implement credential encryption with Android Keystore
 
 ### Key Dependencies
 - **AndroidX Core**: 1.10.1
