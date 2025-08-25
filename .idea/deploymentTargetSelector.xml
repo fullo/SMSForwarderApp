@@ -7,10 +7,10 @@
       </SelectionState>
       <SelectionState runConfigName="SMSForwarder.app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-08-13T15:15:24.892027100Z">
+        <DropdownSelection timestamp="2025-08-25T20:26:27.498453100Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\fullo\.android\avd\Medium_Phone.avd" />
+              <DeviceId pluginId="PhysicalDevice" identifier="serial=178218080405" />
             </handle>
           </Target>
         </DropdownSelection>

@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId = "com.apropos.smsforwarder"
-        minSdk = 33
+        minSdk = 29
         targetSdk = 33
         versionCode = 2
         versionName = "1.6"
